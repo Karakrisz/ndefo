@@ -55,9 +55,13 @@ export function useBackgroundVideo(
     })
   }
 
+  let started = false
+  let fallbackTimer: ReturnType<typeof setTimeout> | undefined
+
   const start = async () => {
     const el = video.value
-    if (!el || !hero) return
+    if (!el || !hero || started) return
+    started = true
 
     // iOS-en csak némított, beágyazottan játszott videó indulhat el magától
     el.muted = true
@@ -81,12 +85,20 @@ export function useBackgroundVideo(
     for (const source of candidates) {
       try {
         await load(el, source)
-        await el.play()
-        return
       } catch {
-        // Következő változat; ha egyik sem megy (pl. alacsony töltöttségű mód
-        // tiltja az automatikus lejátszást), marad a poszterkép.
+        continue // nem játszható le: jön a következő változat
       }
+
+      try {
+        await el.play()
+      } catch {
+        // A böngésző most nem engedi az automatikus indítást (pl. iPhone-on
+        // alacsony töltöttségű módban): az első érintésre elindítjuk.
+        const resume = () => el.play().catch(() => {})
+        window.addEventListener('touchstart', resume, { once: true, passive: true })
+        window.addEventListener('pointerdown', resume, { once: true, passive: true })
+      }
+      return
     }
   }
 
@@ -104,9 +116,13 @@ export function useBackgroundVideo(
 
     if (document.readyState === 'complete') whenIdle()
     else window.addEventListener('load', whenIdle, { once: true })
+
+    // Biztonsági indítás, ha a „load” esemény valamiért késne vagy elmaradna
+    fallbackTimer = setTimeout(start, 4000)
   })
 
   onUnmounted(() => {
+    clearTimeout(fallbackTimer)
     if (objectUrl) URL.revokeObjectURL(objectUrl)
   })
 
