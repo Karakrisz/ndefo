@@ -56,7 +56,7 @@
 <style scoped>
   .impact {
     background:
-      radial-gradient(900px 500px at 10% 0%, rgba(192, 153, 55, 0.22), transparent 60%),
+      radial-gradient(900px 420px at 12% 46%, rgba(192, 153, 55, 0.22), transparent 62%),
       #000;
     border-bottom: 1px solid rgba(192, 153, 55, 0.35);
   }

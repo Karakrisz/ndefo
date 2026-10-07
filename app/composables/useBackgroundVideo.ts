@@ -31,20 +31,63 @@ export function useBackgroundVideo(
     return window.innerWidth < 1280 ? Math.min(needed, 1080) : needed
   }
 
-  const start = () => {
+  /**
+   * A videót egyben töltjük le, és a memóriából játsszuk le. A Safari (iPhone-on
+   * és Macen is) közvetlen hivatkozásnál csak akkor indítja el a videót, ha a
+   * szerver tud részleteket küldeni (HTTP Range) – a Nuxt saját szervere nem tud,
+   * így ott a videó el sem indulna. Ez a megoldás minden tárhelyen működik.
+   */
+  let objectUrl: string | undefined
+
+  const load = async (el: HTMLVideoElement, source: VideoSource) => {
+    const response = await fetch(source.src)
+    if (!response.ok) throw new Error(`Videó letöltése sikertelen: ${response.status}`)
+    const blob = await response.blob()
+
+    if (objectUrl) URL.revokeObjectURL(objectUrl)
+    objectUrl = URL.createObjectURL(new Blob([blob], { type: 'video/mp4' }))
+
+    await new Promise<void>((resolve, reject) => {
+      el.addEventListener('loadeddata', () => resolve(), { once: true })
+      el.addEventListener('error', () => reject(el.error), { once: true })
+      el.src = objectUrl!
+      el.load()
+    })
+  }
+
+  const start = async () => {
     const el = video.value
     if (!el || !hero) return
 
+    // iOS-en csak némított, beágyazottan játszott videó indulhat el magától
+    el.muted = true
+    el.defaultMuted = true
+    el.playsInline = true
+    el.setAttribute('muted', '')
+    el.setAttribute('playsinline', '')
+
     const canPlay = (source: VideoSource) =>
       el.canPlayType(source.mimeType) !== ''
-    const source = hero.pick(requiredHeight(el), canPlay)
-    if (!source) return
+    const height = requiredHeight(el)
+    const picked = hero.pick(height, canPlay)
+    if (!picked) return
+
+    // Ha a kiválasztott (AV1) változat mégsem játszható le, jön a H.264 tartalék
+    const fallback = hero.pick(height, (source) => source.codec === 'h264' && canPlay(source))
+    const candidates = fallback && fallback !== picked ? [picked, fallback] : [picked]
 
     el.addEventListener('playing', () => (isPlaying.value = true), { once: true })
-    el.src = source.src
-    el.play().catch(() => {
-      // Ha a böngésző tiltja az automatikus lejátszást, marad a poszterkép.
-    })
+
+    for (const source of candidates) {
+      try {
+        await load(el, source)
+        await el.play()
+        return
+      } catch {
+        // Következő változat; ha egyik sem megy (pl. alacsony töltöttségű mód
+        // tiltja az automatikus lejátszást), marad a poszterkép.
+      }
+    }
   }
 
   onMounted(() => {
@@ -61,6 +104,10 @@ export function useBackgroundVideo(
 
     if (document.readyState === 'complete') whenIdle()
     else window.addEventListener('load', whenIdle, { once: true })
+  })
+
+  onUnmounted(() => {
+    if (objectUrl) URL.revokeObjectURL(objectUrl)
   })
 
   return { isPlaying }
