@@ -1,0 +1,37 @@
+# Nuxt / Node
+node_modules
+.nuxt
+.output
+.nitro
+.cache
+dist
+*.log
+
+# Helyi környezet
+.env
+.env.*
+!.env.example
+.DS_Store
+*:Zone.Identifier
+.claude
+
+# Mentések az átállás előttről (csak helyben)
+backup-*.tar.gz
+_regi-nuxt3
+
+# Az eredeti 4K videó (forrás) – a webes változatok bent vannak a repóban
+public/video/hero.mov
+
+# A korábbi (autószervizes) sablon képei – az oldal nem használja őket
+public/img/hero/hero-bg*.svg
+public/img/hero-bg.jpg
+public/img/hero-bg.webp
+public/img/hero-icons
+public/img/szolgaltatasok
+public/img/gallery
+public/img/logo.png
+public/img/logo_white.svg
+public/img/red-bg*
+public/img/form-bg.webp
+public/img/map.webp
+public/img/team.webp

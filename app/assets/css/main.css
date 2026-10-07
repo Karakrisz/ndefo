@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  html,
+  body {
+    overflow-x: hidden;
+    background: #000;
+  }
+}
+
+@layer components {
+  .heading-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.005em;
+  }
+
+  /* Kis, ritkított nagybetűs címke a címsorok fölé */
+  .eyebrow {
+    @apply font-sans text-[13px] font-semibold uppercase text-gold-light;
+    letter-spacing: 0.28em;
+  }
+
+  .btn-gold {
+    @apply inline-block rounded-full bg-gold px-10 py-4 text-center text-[14px] font-bold uppercase text-black no-underline shadow-lg;
+    letter-spacing: 0.14em;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      background-color 0.3s ease;
+  }
+
+  .btn-gold:hover {
+    @apply bg-gold-light;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(192, 153, 55, 0.4);
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 rounded-full border border-gold/70 px-7 py-3 text-[13px] font-semibold uppercase text-gold-light no-underline;
+    letter-spacing: 0.14em;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .btn-outline:hover {
+    @apply border-gold bg-gold text-black;
+  }
+
+  .chip {
+    @apply rounded-full border border-gold/50 px-4 py-1 text-xs uppercase tracking-wide text-gold-light;
+  }
+
+  .text-gold-em {
+    @apply font-bold text-gold-light;
+  }
+}
+
+/* Görgetésre megjelenő elemek (useScrollReveal) */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) var(--reveal-delay, 0s),
+    transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) var(--reveal-delay, 0s);
+}
+
+.reveal.reveal-left {
+  transform: translateX(-50px);
+}
+
+.reveal.reveal-right {
+  transform: translateX(50px);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: black;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c09937;
+}
