@@ -12,10 +12,13 @@
 <template>
   <section class="page-hero relative overflow-hidden text-white">
     <!-- Fejléc háttérképének helye -->
-    <div v-if="image" class="absolute inset-0">
-      <ImageFrame :image="image" variant="background" loading="eager" />
-    </div>
-    <div v-if="!image || !image.isEmpty" class="page-hero__overlay absolute inset-0"></div>
+    <!-- Háttérkép, ha van; amíg nincs, az arany színátmenetes háttér látszik -->
+    <template v-if="image && !image.isEmpty">
+      <div class="absolute inset-0">
+        <ImageFrame :image="image" loading="eager" sizes="100vw" />
+      </div>
+      <div class="page-hero__overlay absolute inset-0"></div>
+    </template>
 
     <div
       class="container relative z-10 flex h-full flex-col items-center justify-center text-center"

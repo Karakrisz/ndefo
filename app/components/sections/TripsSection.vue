@@ -23,7 +23,9 @@
           class="trip-card reveal grid md:grid-cols-2"
         >
           <NuxtLink :to="program.to" class="trip-card__image" :aria-label="program.title">
-            <ImageFrame :image="program.image" />
+            <div class="absolute inset-0">
+              <ImageFrame :image="program.image" />
+            </div>
             <span class="trip-card__badge">{{ program.durationLabel }}</span>
             <GrassEdge size="sm" color="#0d0b06" :glow="false" />
           </NuxtLink>
@@ -83,7 +85,9 @@
           </div>
 
           <div class="trip-card__image md:order-2">
-            <ImageFrame :image="trips.custom.image" />
+            <div class="absolute inset-0">
+              <ImageFrame :image="trips.custom.image" />
+            </div>
             <GrassEdge size="sm" color="#0d0b06" :glow="false" />
           </div>
         </article>

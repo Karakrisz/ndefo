@@ -37,7 +37,9 @@
         class="image-container reveal min-h-[320px] md:min-h-[520px]"
         :class="block.imageRight ? 'reveal-right md:order-2' : 'reveal-left'"
       >
-        <ImageFrame :image="block.image" />
+        <div class="absolute inset-0">
+          <ImageFrame :image="block.image" />
+        </div>
         <div class="image-sweep"></div>
         <GrassEdge />
       </div>

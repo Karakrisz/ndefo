@@ -20,25 +20,30 @@
     <div class="container mx-auto pb-16 pt-4">
       <SectionHeading v-if="teaser" :title="gallery.title" :lead="gallery.lead" />
 
-      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="gallery-grid">
         <figure
           v-for="(item, i) in items"
           :key="i"
           class="gallery-card reveal group"
-          :class="{ 'sm:col-span-2': item.featured }"
+          :class="`gallery-card--${item.shape}`"
           :style="{ '--reveal-delay': `${(i % 4) * 0.12}s` }"
         >
-          <!-- Kép helye -->
           <div class="absolute inset-0">
-            <ImageFrame :image="item.image" />
+            <ImageFrame
+              :image="item.image"
+              :sizes="
+                item.shape === 'portrait'
+                  ? '(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw'
+                  : '(max-width: 639px) 100vw, 50vw'
+              "
+            />
           </div>
           <div class="sweep"></div>
 
-          <!-- Utas visszajelzése -->
           <figcaption class="caption">
-            <blockquote class="quote">„{{ item.quote }}”</blockquote>
-            <p class="eyebrow mt-2 !text-[11px]">
-              {{ item.caption }}
+            <blockquote v-if="item.quote" class="quote mb-2">„{{ item.quote }}”</blockquote>
+            <p class="eyebrow !text-[11px]">
+              {{ [item.guestName, item.caption].filter(Boolean).join(' · ') }}
             </p>
           </figcaption>
         </figure>
@@ -50,11 +55,53 @@
 </template>
 
 <style scoped>
+  /* Négyes blokkok: álló (1×2), széles (2×1), álló, széles – hézag nélkül */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 260px;
+    grid-auto-flow: dense;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .gallery-grid {
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 280px;
+    }
+  }
+
   .gallery-card {
     position: relative;
-    min-height: 340px;
     overflow: hidden;
     border-radius: 1rem;
+  }
+
+  .gallery-card--portrait {
+    grid-row: span 2;
+  }
+
+  @media (min-width: 640px) {
+    .gallery-card--wide {
+      grid-column: span 2;
+    }
+
+    .gallery-card--big {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .gallery-card--big {
+      grid-row: span 1;
+    }
   }
 
   .gallery-card::after {
@@ -85,8 +132,8 @@
     position: absolute;
     inset: auto 0 0 0;
     z-index: 1;
-    padding: 3rem 1rem 1rem;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 35%, transparent);
+    padding: 2.5rem 1rem 0.9rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 25%, transparent);
   }
 
   .quote {

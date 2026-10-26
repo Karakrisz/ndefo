@@ -26,7 +26,9 @@
             class="day__image reveal"
             :class="i % 2 ? 'reveal-right md:order-2' : 'reveal-left'"
           >
-            <ImageFrame :image="day.image" />
+            <div class="absolute inset-0">
+              <ImageFrame :image="day.image" />
+            </div>
           </div>
 
           <div
@@ -83,6 +85,7 @@
   }
 
   .day__image {
+    position: relative;
     min-height: 260px;
     overflow: hidden;
   }

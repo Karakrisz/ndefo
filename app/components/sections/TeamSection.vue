@@ -25,10 +25,12 @@
         >
           <!-- Portré helye: minden második szervezőnél a jobb oldalon -->
           <div
-            class="reveal min-h-[420px] overflow-hidden"
+            class="reveal relative min-h-[460px] overflow-hidden"
             :class="i % 2 ? 'reveal-right md:order-2' : 'reveal-left'"
           >
-            <ImageFrame :image="member.photo" />
+            <div class="absolute inset-0">
+              <ImageFrame :image="member.photo" sizes="(max-width: 767px) 100vw, 360px" />
+            </div>
           </div>
 
           <div
@@ -36,11 +38,9 @@
             :class="i % 2 ? 'reveal-left' : 'reveal-right'"
             style="--reveal-delay: 0.15s"
           >
-            <p class="text-sm font-semibold uppercase tracking-widest text-gold">
-              {{ member.role }}
-            </p>
+            <p v-if="member.name" class="eyebrow">{{ member.role }}</p>
             <h3 class="heading-title mt-1 text-[28px] lg:text-[40px]">
-              {{ member.name }}
+              {{ member.displayName }}
             </h3>
             <p
               v-for="(paragraph, j) in member.bio"

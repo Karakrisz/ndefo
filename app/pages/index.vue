@@ -17,7 +17,7 @@
     <ImpactSection teaser />
     <TripsSection teaser />
     <AboutSection teaser />
-    <GallerySection teaser :limit="3" />
+    <GallerySection teaser :limit="4" />
     <TeamSection teaser />
     <ContactCta />
   </main>

@@ -21,6 +21,11 @@ import {
  *   2. add meg ugyanazt az útvonalat utolsó paraméterként, pl.
  *      new ImageSlot('Főkép', 'Szafari', '/img/hero/hero.jpg', '1920×1080', '/img/hero/hero.jpg')
  *
+ * FOTÓK: a valódi fotók előre tömörítve, több méretben vannak a public/img
+ * alatt (pl. gepardok-600.webp, gepardok-1000.webp). Ezeket az
+ * ImageSlot.photo('/img/galeria/gepardok', 'leírás', [600, 1000]) hívás adja meg.
+ * Az eredeti fájlok a forras/kepek mappában vannak.
+ *
  * A [szögletes zárójeles] szövegek kitöltendő helykitöltők.
  */
 
@@ -115,12 +120,7 @@ export const about = {
         'Szervezünk szafarit a *Serengetibe*, a *Ngorongoro-kráterbe* és a *Tarangire Nemzeti Parkba* – ott, ahol az oroszlán, az elefánt és a zsiráf nem kerítés mögött él.',
         'Az út *Arushából* indul, a szállásaid lodge-ok és sátortáborok a vadon közelében, a szafarira pedig kényelmes *4×4-es terepjáróval* viszünk.',
       ],
-      new ImageSlot(
-        'Szafari / vadvilág fotó',
-        'Vadállatok a tanzániai szavannán',
-        '/img/about/szafari.jpg',
-        '1200×900',
-      ),
+      ImageSlot.photo('/img/galeria/gepardok', 'Gepárdok a szavannán', [600, 1000]),
     ),
     new ContentBlock(
       'rolunk-szervezes',
@@ -131,67 +131,32 @@ export const about = {
         'Kint sem maradsz magadra – a repülőtéren helyi vezetőd vár, és végig veled marad.',
         `És közben jót is teszel: minden utazás *${company.donationLabel}-a* helyi rászorulókhoz kerül.`,
       ],
-      new ImageSlot(
-        'Szállás / sátortábor vagy szafariautó fotó',
-        'Szafariszállás Tanzániában',
-        '/img/about/szallas.jpg',
-        '1200×900',
-      ),
+      ImageSlot.photo('/img/galeria/a-szafariautoban', 'Utasaink a szafariautóban', [600, 1200]),
       true,
     ),
   ],
 }
 
-const galleryPhoto = (n: number, label: string, size = '800×800') =>
-  new ImageSlot(
-    `Galéria ${n}. – ${label}`,
-    `Utasunk fotója Tanzániából – ${label}`,
-    `/img/galeria/galeria-${n}.jpg`,
-    size,
-  )
+const photo = (name: string, alt: string, widths = [600, 1200]) =>
+  ImageSlot.photo(`/img/galeria/${name}`, alt, widths)
 
 export const gallery = {
   title: 'Utasaink szemével',
-  lead: 'Fotók és visszajelzések azoktól, akik már velünk jártak Tanzániában. Valódi pillanatok, valódi utazásokról.',
+  lead: 'Pillanatok azoktól, akik már velünk jártak Tanzániában. Valódi fotók, valódi utazásokról.',
+  // A sorrend számít: négyesével (álló, széles, álló, széles) hézag nélkül tölti ki a rácsot.
+  // Utas véleménye a GalleryItem 4–5. paraméterében adható meg.
   items: [
-    new GalleryItem(
-      galleryPhoto(1, 'szafari', '1600×800'),
-      '[Utas neve]',
-      '[Utazás, évszám]',
-      '[Ide kerül az utas rövid véleménye az utazásról.]',
-      true,
-    ),
-    new GalleryItem(
-      galleryPhoto(2, 'vadvilág'),
-      '[Utas neve]',
-      '[Utazás, évszám]',
-      '[Ide kerül az utas rövid véleménye.]',
-    ),
-    new GalleryItem(
-      galleryPhoto(3, 'Serengeti'),
-      '[Utas neve]',
-      '[Utazás, évszám]',
-      '[Ide kerül az utas rövid véleménye.]',
-    ),
-    new GalleryItem(
-      galleryPhoto(4, 'Ngorongoro'),
-      '[Utas neve]',
-      '[Utazás, évszám]',
-      '[Ide kerül az utas rövid véleménye.]',
-    ),
-    new GalleryItem(
-      galleryPhoto(5, 'helyiekkel'),
-      '[Utas neve]',
-      '[Utazás, évszám]',
-      '[Ide kerül az utas rövid véleménye.]',
-    ),
-    new GalleryItem(
-      galleryPhoto(6, 'csoportkép', '1600×800'),
-      '[Utas neve]',
-      '[Utazás, évszám]',
-      '[Ide kerül az utas rövid véleménye az utazásról.]',
-      true,
-    ),
+    new GalleryItem(photo('csoportkep-a-szafariautonal', 'Csoportkép a szafariautónál'), 'Csoportkép a szafariautónál'),
+    new GalleryItem(photo('ebed-a-szafarin', 'Ebéd a szafari közben', [600, 1000]), 'Ebéd a szafari közben', 'wide'),
+    new GalleryItem(photo('maszaj-talalkozas', 'Találkozás a maszájokkal'), 'Találkozás a maszájokkal'),
+    new GalleryItem(photo('kozos-ebed', 'Közös ebéd a csapattal', [600, 1000]), 'Közös ebéd a csapattal', 'wide'),
+    new GalleryItem(photo('a-szafariauto-tetejen', 'A szafariautó tetején'), 'A szafariautó tetején'),
+    new GalleryItem(photo('indulas', 'Indulás a szafarira', [600, 1000]), 'Indulás a szafarira', 'wide'),
+    new GalleryItem(photo('tarangire-bejarat', 'A Tarangire Nemzeti Park bejáratánál'), 'Tarangire Nemzeti Park'),
+    new GalleryItem(photo('csoportkep-indulas', 'Csoportkép indulás előtt', [600, 1000]), 'Csoportkép indulás előtt', 'wide'),
+    new GalleryItem(photo('szafariauto-a-sikon', 'Szafariautó a síkságon', [462]), 'Végtelen síkság'),
+    new GalleryItem(photo('gepardok', 'Gepárdok a szavannán', [600, 1000]), 'Gepárdok', 'big'),
+    new GalleryItem(photo('a-szafariautoban', 'Utasaink a szafariautóban'), 'Úton a parkban'),
   ],
 }
 
@@ -201,34 +166,16 @@ export const team = {
   // Új szervező felvételéhez adj a listához még egy TeamMember-t.
   members: [
     new TeamMember(
-      '[Szervező neve]',
-      'Utazásszervező',
-      [
-        '[Rövid bemutatkozás: ki ő, mi köti Tanzániához, mióta szervez utakat.]',
-        '[Miért érdemes vele utazni – személyes hangvételű 2–3 mondat.]',
-      ],
-      new ImageSlot(
-        'Szervező portréfotója',
-        'Utazásszervezőnk portréja',
-        '/img/csapat/szervezo-1.jpg',
-        '800×1000',
-      ),
-      ['[Beszélt nyelvek]', '[Kedvenc hely Tanzániában]'],
+      'Kahn Szilvia',
+      'Helyi vezető',
+      [], // A bemutatkozó szöveg ide kerül, bekezdésenként egy szöveg.
+      ImageSlot.photo('/img/csapat/kahn-szilvia', 'Kahn Szilvia a szavannán', [600, 1200]),
     ),
     new TeamMember(
-      '[Második szervező neve]',
+      '', // A név ide kerül.
       'Helyi vezető',
-      [
-        '[Rövid bemutatkozás: ki ő, mi a szerepe az utazások szervezésében.]',
-        '[Személyes hangvételű 2–3 mondat – pl. mit szeret megmutatni az utasoknak.]',
-      ],
-      new ImageSlot(
-        'Második szervező portréfotója',
-        'Helyi vezetőnk portréja',
-        '/img/csapat/szervezo-2.jpg',
-        '800×1000',
-      ),
-      ['[Beszélt nyelvek]', '[Kedvenc hely Tanzániában]'],
+      [],
+      ImageSlot.photo('/img/csapat/helyi-vezeto', 'Helyi vezetőnk a szafariautóban', [600, 1200]),
     ),
   ],
 }
@@ -261,12 +208,7 @@ export const programs = [
     priceFrom: 2700,
     currency: 'USD',
     priceNote: 'fejenként, a résztvevők számától függően',
-    image: new ImageSlot(
-      'Program borítóképe – szafari',
-      'Észak-tanzániai szafari',
-      '/img/utazasok/eszak-tanzaniai-szafari/borito.jpg',
-      '1600×1000',
-    ),
+    image: photo('csoportkep-a-szafariautonal', 'Utasaink a szafariautónál'),
     days: [
       new TripDay(
         1,
@@ -274,7 +216,7 @@ export const programs = [
         [
           'Karibu – Isten hozott Tanzániában! A Kilimandzsáró nemzetközi repülőtéren helyi vezetőd vár, és elvisz az arushai szállásodra.',
         ],
-        dayPhoto('eszak-tanzaniai-szafari', 1, 'érkezés, Arusha'),
+        photo('indulas', 'Érkezés, találkozás a helyi vezetővel', [600, 1000]),
         'Arusha',
         'vacsora',
       ),
@@ -286,7 +228,7 @@ export const programs = [
           'Egész napos szafari a parkban: oroszlánok, zebrák, zsiráfok, gnúk és megannyi madárfaj kerülhet a szemed elé.',
           'Késő délután továbbutazás a Burunge-tó közelében fekvő szállásra, ahol az afrikai vadon békés hangjai között töltöd az éjszakát.',
         ],
-        dayPhoto('eszak-tanzaniai-szafari', 2, 'Tarangire, elefántok'),
+        photo('tarangire-bejarat', 'A Tarangire Nemzeti Park bejáratánál'),
         'lodge a Burunge-tónál',
         'reggeli, ebéd, vacsora',
       ),
@@ -297,7 +239,7 @@ export const programs = [
           'Korai reggeli után irány a világhírű Serengeti. Az út a felföldön át vezet, hagyományos maszáj falvak mellett és a Ngorongoro-kráter pereme mentén.',
           'Éppen időben érkezel egy délutáni szafarira a végtelen síkságon. Itt élnek azok az állatok, amelyek a Serengetit legendássá tették: oroszlánok, gepárdok, elefántok, zsiráfok.',
         ],
-        dayPhoto('eszak-tanzaniai-szafari', 3, 'Serengeti, sátortábor'),
+        photo('a-szafariauto-tetejen', 'Szafari a nyitott tetejű autóból'),
         'Haus of Nature Tented Camp',
         'reggeli, ebéd, vacsora',
       ),
@@ -308,7 +250,7 @@ export const programs = [
           'Egész napos kirándulás az UNESCO Világörökség részét képező nemzeti parkban, piknikebéddel a park szívében.',
           'Este visszatérés a táborba, vacsora és pihenés.',
         ],
-        dayPhoto('eszak-tanzaniai-szafari', 4, 'Serengeti, zsiráf naplementében'),
+        photo('gepardok', 'Gepárdok a szavannán', [600, 1000]),
         'Haus of Nature Tented Camp',
         'reggeli, piknikebéd, vacsora',
       ),
@@ -330,7 +272,7 @@ export const programs = [
           'Reggeli után visszaút Arushába, ahová dél körül érkezel. A csoportos program itt hivatalosan véget ér.',
           'Transzfer a repülőtérre.',
         ],
-        dayPhoto('eszak-tanzaniai-szafari', 6, 'gepárd / búcsú a szavannától'),
+        photo('csoportkep-indulas', 'Közös csoportkép az út végén', [600, 1000]),
         '',
         'reggeli',
       ),
@@ -364,12 +306,7 @@ export const trips = {
     ],
     options: ['Egyéni időpont', 'Saját útvonal', 'Saját tempó'],
     ctaLabel: 'Egyéni utat tervezek',
-    image: new ImageSlot(
-      'Egyéni szervezés – hangulatkép',
-      'Egyénileg szervezett utazás Tanzániában',
-      '/img/utazasok/egyeni-szervezes.jpg',
-      '1600×1000',
-    ),
+    image: photo('maszaj-talalkozas', 'Találkozás a maszájokkal'),
   },
 }
 
@@ -417,7 +354,7 @@ export const pages = {
   galeria: {
     eyebrow: 'Utasaink szemével',
     title: 'Galéria',
-    lead: 'Pillanatok és visszajelzések azoktól, akik már velünk jártak Tanzániában.',
+    lead: 'Pillanatok azoktól, akik már velünk jártak Tanzániában.',
     image: pageImage('galeria', 'Galéria'),
   },
   csapat: {

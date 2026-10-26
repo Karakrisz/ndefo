@@ -7,14 +7,28 @@
       /** `background`: a felirat a sarokba kerül, hogy ne takarja a ráúsztatott tartalmat. */
       variant?: 'default' | 'background' | 'mini'
       loading?: 'lazy' | 'eager'
+      /** Milyen szélesen jelenik meg a kép (a böngésző ez alapján választ méretet). */
+      sizes?: string
     }>(),
-    { variant: 'default', loading: 'lazy' },
+    { variant: 'default', loading: 'lazy', sizes: '(max-width: 767px) 100vw, 50vw' },
   )
 </script>
 
 <template>
+  <!-- Előre tömörített fotó több méretben -->
+  <img
+    v-if="image.srcset"
+    :src="image.url!"
+    :srcset="image.srcset"
+    :sizes="sizes"
+    :alt="image.alt"
+    :loading="loading"
+    decoding="async"
+    class="h-full w-full object-cover"
+  />
+
   <NuxtImg
-    v-if="!image.isEmpty"
+    v-else-if="!image.isEmpty"
     :src="image.src!"
     :alt="image.alt"
     :loading="loading"
