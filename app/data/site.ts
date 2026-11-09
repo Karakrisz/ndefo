@@ -172,10 +172,14 @@ export const team = {
       ImageSlot.photo('/img/csapat/kahn-szilvia', 'Kahn Szilvia a szavannán', [600, 1200]),
     ),
     new TeamMember(
-      '', // A név ide kerül.
+      'Charles Nnko',
       'Helyi vezető',
-      [],
-      ImageSlot.photo('/img/csapat/helyi-vezeto', 'Helyi vezetőnk a szafariautóban', [600, 1200]),
+      [
+        'Charles 20 éve járja a nemzeti parkokat idegenvezetőként – ez a foglalkozása és egyben a hobbija is.',
+        'A szafari nála nem munka, hanem szenvedély: azt mutatja meg, amit maga is szeret.',
+      ],
+      ImageSlot.photo('/img/csapat/helyi-vezeto', 'Charles Nnko, helyi vezetőnk a szafariautóban', [600, 1200]),
+      ['20 év tapasztalat', '43 éves', 'Beszél angolul', 'Beszél spanyolul'],
     ),
   ],
 }
